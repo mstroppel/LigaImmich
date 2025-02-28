@@ -7,6 +7,7 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <ContainerRegistry>ghcr.io</ContainerRegistry>
         <ContainerRepository>mstroppe/liga-immich</ContainerRepository>
+        <PrivateRepositoryUrl>github.com/mstroppel/LigaImmich</PrivateRepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
