@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <ContainerRegistry>ghcr.io</ContainerRegistry>
-        <ContainerRepository>ghcr.io/mstroppe/liga-immich</ContainerRepository>
+        <ContainerRepository>mstroppe/liga-immich</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>
