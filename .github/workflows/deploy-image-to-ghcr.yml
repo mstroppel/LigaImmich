@@ -7,14 +7,12 @@ on:
   push:
     branches:
       - main
+      - feat/try-one
   workflow_dispatch:
 
 jobs:
   push-store-image:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: './FL.LigaImmich'
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
