@@ -5,7 +5,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <ContainerRepository>liga-immich</ContainerRepository>
+        <ContainerRegistry>ghcr.io</ContainerRegistry>
+        <ContainerRepository>ghcr.io/mstroppe/liga-immich</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>
