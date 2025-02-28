@@ -1,6 +1,0 @@
-@FL.LigaImmich_HostAddress = http://localhost:5149
-
-GET {{FL.LigaImmich_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
