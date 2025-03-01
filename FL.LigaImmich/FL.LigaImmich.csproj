@@ -6,8 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <ContainerRegistry>ghcr.io</ContainerRegistry>
-        <ContainerRepository>mstroppe/liga-immich</ContainerRepository>
-        <PrivateRepositoryUrl>github.com/mstroppel/LigaImmich</PrivateRepositoryUrl>
+        <ContainerRepository>ghcr.io/mstroppel/liga-immich</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>
