@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - feat/try-one
   workflow_dispatch:
 
 jobs:
@@ -19,7 +18,7 @@ jobs:
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
-      - name: Restore dependencies
+      - name: 'Restore dependencies'
         run: dotnet restore
       - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v3
@@ -27,5 +26,5 @@ jobs:
           registry: ghcr.io
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
-      - name: Create Docker Image
+      - name: 'Create and Publish Docker Image'
         run: dotnet publish ./FL.LigaImmich/FL.LigaImmich.csproj /t:PublishContainer -r linux-x64

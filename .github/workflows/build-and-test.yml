@@ -1,0 +1,28 @@
+﻿name: Build and Test
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.cs'
+      - '**.csproj'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@main
+      - name: 'Restore dependencies'
+        run: dotnet restore
+      - name: 'Build'
+        run: dotnet build --configuration Release --no-restore
+      - name: 'Test'
+        run: dotnet test --no-restore --verbosity normal
