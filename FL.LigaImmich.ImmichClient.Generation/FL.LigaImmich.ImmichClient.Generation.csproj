@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NSwag.MSBuild">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Tapio.StripeConnector.Inbound.Adapters.Api\Tapio.StripeConnector.Inbound.Adapters.Api.csproj" />
+    </ItemGroup>
+
+    <Target Name="ApiClientGeneration" AfterTargets="AfterBuild">
+        <Message Text="Generating OpenAPI document." Importance="high" />
+        <!-- Explict package source because of 401 error in Azure Pipelines: https://github.com/microsoft/azure-pipelines-tasks/issues/10057-->
+        <Exec Command="dotnet tool restore --add-source https://api.nuget.org/v3/index.json --ignore-failed-sources" />
+        <Exec Command="dotnet swagger tofile --output swagger.v1.json $(OutputPath)$(AssemblyName).dll v1" Outputs="swagger.v1.json" EnvironmentVariables="DOTNET_ROLL_FORWARD=LatestMajor" />
+        <Message Text="Generating API client" Importance="high" />
+        <!-- Ensure Swashbuckle.AspNetCore.Cli uses the same version like the API. -->
+        <Exec Command="$(NSwagExe) run ApiClient.nswag" />
+    </Target>
+
+</Project>
