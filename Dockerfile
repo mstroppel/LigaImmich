@@ -10,7 +10,7 @@ RUN dotnet restore
 COPY . .
 RUN dotnet publish FL.LigaImmich/FL.LigaImmich.csproj -c Release -o /app/publish --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 appgroup && \
@@ -19,5 +19,4 @@ RUN addgroup --system --gid 1001 appgroup && \
 COPY --from=build /app/publish .
 
 USER appuser
-EXPOSE 8080
 ENTRYPOINT ["dotnet", "FL.LigaImmich.dll"]
