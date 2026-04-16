@@ -1,28 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Client;
-
+using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace Tapio.StripeConnector.ApiClient;
+namespace FL.LigaImmich.ImmichClient;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddStripeConnectorApiClient(this IServiceCollection services, StripeConnectorApiClientConfig config)
+    public static IServiceCollection AddImmichClient(this IServiceCollection services, ImmichClientConfig config)
     {
         ArgumentNullException.ThrowIfNull(config);
-        ArgumentNullException.ThrowIfNull(config.BaseUrl);
-        ArgumentNullException.ThrowIfNull(config.Authority);
-        ArgumentNullException.ThrowIfNull(config.ResourceUrl);
 
-        var confidentialClient = ConfidentialClientApplicationBuilder
-            .Create(config.ClientId.ToString())
-            .WithAuthority(config.Authority)
-            .WithClientSecret(config.ClientSecret)
-            .Build();
+        services.AddHttpClient<IImmichClient, ImmichClient>(httpClient =>
+        {
+            httpClient.BaseAddress = config.BaseUrl;
+            httpClient.DefaultRequestHeaders.Add("x-api-key", config.ApiKey);
+        })
+        .AddStandardResilienceHandler();
 
-        return services.AddHttpClient<IStripeConnectorApiClient, StripeConnectorApiClient>(
-            httpClient => new StripeConnectorApiClient(httpClient, config, confidentialClient))
-                .AddStandardResilienceHandler()
-                .Services;
+        return services;
     }
 }

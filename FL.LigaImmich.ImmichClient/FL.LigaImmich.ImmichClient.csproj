@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
@@ -25,7 +25,7 @@
         <Exec Command="dotnet tool restore"/>
         <Message Text="Generating API client" Importance="high"/>
         <!-- Ensure Swashbuckle.AspNetCore.Cli uses the same version like the API. -->
-        <Exec Command="$(NSwagExe_Net80) run ImmichClient.nswag"/>
+        <Exec Command="$(NSwagExe_Net100) run ImmichClient.nswag"/>
     </Target>
 
 </Project>

@@ -1,12 +1,9 @@
-﻿using System;
+using System;
 
-namespace Tapio.StripeConnector.ApiClient;
+namespace FL.LigaImmich.ImmichClient;
 
-public record StripeConnectorApiClientConfig
+public record ImmichClientConfig
 {
-    public required Uri Authority { get; init; }
-    public required Uri ResourceUrl { get; init; }
-    public Guid ClientId { get; init; }
-    public required string ClientSecret { get; init; }
     public required Uri BaseUrl { get; init; }
+    public required string ApiKey { get; init; }
 }

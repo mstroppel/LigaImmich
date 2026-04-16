@@ -3,7 +3,7 @@
   "defaultVariables": "",
   "documentGenerator": {
     "fromDocument": {
-      "url": "immich-openapio-specs.json",
+      "url": "immich-openapi-specs.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
