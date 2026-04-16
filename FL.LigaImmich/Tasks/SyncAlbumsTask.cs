@@ -21,5 +21,7 @@ internal sealed class SyncAlbumsTask : IScheduledTask
     {
         var albums = await _immichClient.GetAllAlbumsAsync(assetId: null, shared: null, cancellationToken);
         _logger.LogInformation("Fetched {Count} albums from Immich.", albums.Count);
+        var peopleResponseDto = await _immichClient.GetAllPeopleAsync(null, null, null, null, null, cancellationToken: cancellationToken);
+        _logger.LogInformation("Total people are {TotalPeople}", peopleResponseDto.Total);
     }
 }
