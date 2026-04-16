@@ -1,0 +1,70 @@
+﻿name: Docker Publish
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/liga-immich
+          flavor: |
+            latest=false
+          tags: |
+            # On push to main: sha tag + latest
+            type=sha,prefix=sha-,enable=${{ github.event_name == 'push' }}
+            type=raw,value=latest,enable=${{ github.event_name == 'push' }}
+            # On GitHub release: full semver, major.minor, major, and stable tag
+            type=semver,pattern={{version}},enable=${{ github.event_name == 'release' }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ github.event_name == 'release' }}
+            type=semver,pattern={{major}},enable=${{ github.event_name == 'release' }}
+            type=raw,value=stable,enable=${{ github.event_name == 'release' }}
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build and push Docker image
+        run: |
+          PRIMARY_TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n1)
+          IMAGE_TAG="${PRIMARY_TAG##*:}"
+          dotnet publish ./FL.LigaImmich/FL.LigaImmich.csproj /t:PublishContainer -r linux-x64 \
+            -p:ContainerImageTag="$IMAGE_TAG"
+
+      - name: Push additional tags
+        if: github.event_name == 'release'
+        run: |
+          PRIMARY_TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n1)
+          docker pull "$PRIMARY_TAG"
+          while IFS= read -r tag; do
+            [ "$tag" = "$PRIMARY_TAG" ] && continue
+            docker tag "$PRIMARY_TAG" "$tag"
+            docker push "$tag"
+          done <<< "${{ steps.meta.outputs.tags }}"
