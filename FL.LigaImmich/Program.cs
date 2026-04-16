@@ -1,42 +1,17 @@
-var builder = WebApplication.CreateBuilder(args);
+using FL.LigaImmich.ImmichClient;
+using FL.LigaImmich.Scheduling;
+using FL.LigaImmich.Tasks;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+var builder = Host.CreateApplicationBuilder(args);
 
-var app = builder.Build();
+builder.Services.Configure<SchedulerOptions>(builder.Configuration.GetSection("Scheduler"));
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+var immichConfig = builder.Configuration.GetSection("Immich").Get<ImmichClientConfig>()
+    ?? throw new InvalidOperationException("Missing 'Immich' configuration section.");
+builder.Services.AddImmichClient(immichConfig);
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+builder.Services.AddScheduledTask<SyncAlbumsTask>();
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+builder.Services.AddHostedService<CronSchedulerService>();
 
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+await builder.Build().RunAsync();
