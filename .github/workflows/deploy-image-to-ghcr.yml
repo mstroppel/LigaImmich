@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - main
+  release:
+    types:
+      - created
   workflow_dispatch:
 
 jobs:
@@ -27,4 +30,10 @@ jobs:
           username: ${{github.actor}}
           password: ${{secrets.GITHUB_TOKEN}}
       - name: 'Create and Publish Docker Image'
-        run: dotnet publish ./FL.LigaImmich/FL.LigaImmich.csproj /t:PublishContainer -r linux-x64
+        run: |
+          if [ "${{ github.event_name }}" = "release" ]; then
+            dotnet publish ./FL.LigaImmich/FL.LigaImmich.csproj /t:PublishContainer -r linux-x64 \
+              -p:ContainerImageTag=${{ github.event.release.tag_name }}
+          else
+            dotnet publish ./FL.LigaImmich/FL.LigaImmich.csproj /t:PublishContainer -r linux-x64
+          fi
