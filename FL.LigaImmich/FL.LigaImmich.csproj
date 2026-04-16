@@ -4,9 +4,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <ContainerRegistry>ghcr.io</ContainerRegistry>
-        <ContainerRepository>ghcr.io/mstroppel/liga-immich</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>
