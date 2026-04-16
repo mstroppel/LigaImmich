@@ -9,7 +9,7 @@ namespace FL.LigaImmich.ImmichClient;
 
 public partial class ImmichClient
 {
-    static partial void UpdateJsonSerializerSettings(JsonSerializerOptions settings)
+    private static void UpdateJsonSerializerSettings(JsonSerializerOptions settings)
     {
         settings.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     }

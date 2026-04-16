@@ -40,7 +40,7 @@
       "contractsOutputFilePath": null,
       "parameterDateTimeFormat": "s",
       "parameterDateFormat": "yyyy-MM-dd",
-      "generateUpdateJsonSerializerSettingsMethod": true,
+      "generateUpdateJsonSerializerSettingsMethod": false,
       "useRequestAndResponseSerializationSettings": false,
       "serializeTypeInformation": false,
       "queryNullValue": "",
