@@ -21,13 +21,32 @@
         </PackageReference>
     </ItemGroup>
 
-    <Target Name="ApiClientGeneration" AfterTargets="BeforeBuild">
-        <Message Text="Generating OpenAPI document." Importance="high"/>
-        <!-- Explict package source because of 401 error in Azure Pipelines: https://github.com/microsoft/azure-pipelines-tasks/issues/10057-->
-        <Exec Command="dotnet tool restore"/>
-        <Message Text="Generating API client" Importance="high"/>
-        <!-- Ensure Swashbuckle.AspNetCore.Cli uses the same version like the API. -->
+    <!-- The generated client is produced at build time and excluded from the default
+         SDK Compile glob so a clean clone (without the .g.cs file) still evaluates.
+         The target below regenerates it and adds it to @(Compile) before CoreCompile. -->
+    <ItemGroup>
+        <Compile Remove="ImmichClient.g.cs"/>
+        <None Include="ImmichClient.g.cs" Condition="Exists('ImmichClient.g.cs')"/>
+    </ItemGroup>
+
+    <Target Name="DownloadImmichOpenApiSpec" BeforeTargets="ApiClientGeneration"
+            Inputs="immich-openapi-specs.ref"
+            Outputs="immich-openapi-specs.json">
+        <PropertyGroup>
+            <ImmichSpecRef>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\immich-openapi-specs.ref').Trim())</ImmichSpecRef>
+        </PropertyGroup>
+        <Message Text="Downloading Immich OpenAPI spec at ref $(ImmichSpecRef)." Importance="high"/>
+        <Delete Files="immich-openapi-specs.json"/>
+        <DownloadFile SourceUrl="https://github.com/immich-app/immich/raw/$(ImmichSpecRef)/open-api/immich-openapi-specs.json"
+                      DestinationFolder="$(MSBuildProjectDirectory)"/>
+    </Target>
+
+    <Target Name="ApiClientGeneration" BeforeTargets="BeforeCompile;CoreCompile" DependsOnTargets="DownloadImmichOpenApiSpec">
+        <Message Text="Generating Immich API client." Importance="high"/>
         <Exec Command="$(NSwagExe_Net100) run ImmichClient.nswag"/>
+        <ItemGroup>
+            <Compile Include="ImmichClient.g.cs"/>
+        </ItemGroup>
     </Target>
 
 </Project>
