@@ -1,7 +1,8 @@
 <Solution>
   <Folder Name="/Solution Files/">
-    <File Path=".dockerignore" />
+    <File Path=".env.example" />
     <File Path=".gitignore" />
+    <File Path="Dockerfile" />
     <File Path="global.json" />
     <File Path="LICENSE" />
     <File Path="README.md" />
