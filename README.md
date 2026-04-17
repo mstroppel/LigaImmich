@@ -57,16 +57,17 @@ All settings in [appsettings.json](FL.LigaImmich/appsettings.json) can be overri
 
 ## Regenerating the Immich client
 
-The typed client in [FL.LigaImmich.ImmichClient](FL.LigaImmich.ImmichClient/) is produced by NSwag from Immich's OpenAPI spec at build time — neither the spec nor the generated code is checked in. The spec version is pinned in [immich-openapi-specs.ref](FL.LigaImmich.ImmichClient/immich-openapi-specs.ref); `dotnet build` downloads the matching spec and re-runs NSwag automatically when the ref changes.
+The typed client in [FL.LigaImmich.ImmichClient](FL.LigaImmich.ImmichClient/) is produced by NSwag at build time from the committed [immich-openapi-specs.json](FL.LigaImmich.ImmichClient/immich-openapi-specs.json), so builds stay deterministic and offline-capable. The generated `ImmichClient.g.cs` is gitignored — don't commit it.
 
-To bump the Immich version:
+Bumping the Immich version is a manual, two-step dev action:
 
 ```bash
 # pin a specific tag (or run with no -Ref to fetch latest release)
 pwsh FL.LigaImmich.ImmichClient/Download-ImmichOpenApiSpec.ps1 -Ref v1.130.0
 
-# commit the updated immich-openapi-specs.ref
+# rebuild to regenerate the client, then commit the updated spec + ref
 dotnet build FL.LigaImmich.slnx
+git add FL.LigaImmich.ImmichClient/immich-openapi-specs.json FL.LigaImmich.ImmichClient/immich-openapi-specs.ref
 ```
 
 ## Next Steps

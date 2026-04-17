@@ -1,5 +1,4 @@
-# Generated NSwag client and the OpenAPI spec it is derived from are
-# produced at build time and must not be committed. The spec version is
-# pinned via immich-openapi-specs.ref.
+# Generated NSwag client is produced at build time from the committed
+# immich-openapi-specs.json. Refresh the spec manually via
+# Download-ImmichOpenApiSpec.ps1 and commit both the .json and the .ref file.
 ImmichClient.g.cs
-immich-openapi-specs.json

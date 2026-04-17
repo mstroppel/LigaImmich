@@ -21,29 +21,26 @@
         </PackageReference>
     </ItemGroup>
 
-    <!-- The generated client is produced at build time and excluded from the default
-         SDK Compile glob so a clean clone (without the .g.cs file) still evaluates.
-         The target below regenerates it and adds it to @(Compile) before CoreCompile. -->
+    <!-- The generated client is produced at build time from the committed
+         immich-openapi-specs.json so builds stay deterministic and offline-capable.
+         It is excluded from the default SDK Compile glob so a clean clone
+         (without the .g.cs file) still evaluates, then added back to @(Compile)
+         inside the target once generated. -->
     <ItemGroup>
         <Compile Remove="ImmichClient.g.cs"/>
         <None Include="ImmichClient.g.cs" Condition="Exists('ImmichClient.g.cs')"/>
     </ItemGroup>
 
-    <Target Name="DownloadImmichOpenApiSpec" BeforeTargets="ApiClientGeneration"
-            Inputs="immich-openapi-specs.ref"
-            Outputs="immich-openapi-specs.json">
-        <PropertyGroup>
-            <ImmichSpecRef>$([System.IO.File]::ReadAllText('$(MSBuildProjectDirectory)\immich-openapi-specs.ref').Trim())</ImmichSpecRef>
-        </PropertyGroup>
-        <Message Text="Downloading Immich OpenAPI spec at ref $(ImmichSpecRef)." Importance="high"/>
-        <Delete Files="immich-openapi-specs.json"/>
-        <DownloadFile SourceUrl="https://github.com/immich-app/immich/raw/$(ImmichSpecRef)/open-api/immich-openapi-specs.json"
-                      DestinationFolder="$(MSBuildProjectDirectory)"/>
-    </Target>
-
-    <Target Name="ApiClientGeneration" BeforeTargets="BeforeCompile;CoreCompile" DependsOnTargets="DownloadImmichOpenApiSpec">
+    <Target Name="ApiClientGeneration" BeforeTargets="BeforeCompile;CoreCompile"
+            Inputs="immich-openapi-specs.json;ImmichClient.nswag"
+            Outputs="ImmichClient.g.cs">
         <Message Text="Generating Immich API client." Importance="high"/>
         <Exec Command="$(NSwagExe_Net100) run ImmichClient.nswag"/>
+    </Target>
+
+    <!-- Include the generated file in Compile regardless of whether
+         ApiClientGeneration ran this build (up-to-date check may skip it). -->
+    <Target Name="IncludeGeneratedApiClient" BeforeTargets="BeforeCompile;CoreCompile" DependsOnTargets="ApiClientGeneration">
         <ItemGroup>
             <Compile Include="ImmichClient.g.cs"/>
         </ItemGroup>
