@@ -400,4 +400,5 @@ FodyWeavers.xsd
 *.sln.iml
 .idea
 
-appsettings.Development.json
+# Local environment file for Docker. See .env.example for the template.
+.env

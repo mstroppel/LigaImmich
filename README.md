@@ -15,14 +15,26 @@
 ## Running locally
 
 ```bash
+# one-time: store your Immich API key outside of source control
+dotnet user-secrets --project FL.LigaImmich set "Immich:ApiKey" "<your-api-key>"
+
 dotnet run --project FL.LigaImmich
 ```
 
-Configure the Immich endpoint and API key in [FL.LigaImmich/appsettings.json](FL.LigaImmich/appsettings.json) or via environment variables (see below).
+The Immich base URL defaults to `http://localhost:2283/api` in `Development` (see [appsettings.Development.json](FL.LigaImmich/appsettings.Development.json)); override it with user-secrets or environment variables if needed. Missing/empty config fails fast at startup via options validation.
 
 ## Running in Docker
 
 Images are published to `ghcr.io/mstroppel/liga-immich`. See the [Dockerfile](Dockerfile).
+
+```bash
+# copy .env.example to .env and fill in your values
+cp .env.example .env
+
+docker run --rm --env-file .env ghcr.io/mstroppel/liga-immich:latest
+```
+
+Or pass overrides directly:
 
 ```bash
 docker run --rm \
