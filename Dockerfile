@@ -13,10 +13,7 @@ RUN dotnet publish FL.LigaImmich/FL.LigaImmich.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
-RUN addgroup --system --gid 1001 appgroup && \
-    adduser --system --uid 1001 --ingroup appgroup appuser
-
 COPY --from=build /app/publish .
 
-USER appuser
+USER $APP_UID
 ENTRYPOINT ["dotnet", "FL.LigaImmich.dll"]
