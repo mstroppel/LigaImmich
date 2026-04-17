@@ -5,7 +5,8 @@
       "Bash(git *)",
       "Bash(dotnet *)",
       "Bash(docker *)",
-      "Bash(pwsh *)"
+      "Bash(pwsh *)",
+      "Bash(podman *)"
     ]
   }
 }
