@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Files/">
+    <File Path=".dockerignore" />
+    <File Path=".gitignore" />
+    <File Path="global.json" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="FL.LigaImmich.ImmichClient/FL.LigaImmich.ImmichClient.csproj" />
+  <Project Path="FL.LigaImmich/FL.LigaImmich.csproj" />
+</Solution>
