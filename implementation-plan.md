@@ -35,10 +35,19 @@ Source: `Next Steps` list in [README.md](README.md#next-steps).
 
 ## 4. Proper setup of `.claude/settings.json`
 
-- Current allowlist ([settings.json](.claude/settings.json)) covers `gh *`, `git *`, `dotnet *`. Review which additional commands are actually used in this repo (e.g. `docker *`, `pwsh *`, `nswag *`).
-- Consider running the `less-permission-prompts` skill on recent transcripts to derive a data-driven allowlist.
-- Split between user-level and project-level settings: project settings should only contain rules specific to this repo.
+Status: first pass done — revisit after a few sessions to see which prompts still appear.
+
+Done in this pass ([settings.json](.claude/settings.json)):
+
+- Extended the allow list with the tools this repo actually uses: `docker *` (covers `docker compose` too; repo has a [Dockerfile](Dockerfile) and `docker-publish.yml` workflow), `pwsh *` (for [Download-ImmichOpenApiSpec.ps1](FL.LigaImmich.ImmichClient/Download-ImmichOpenApiSpec.ps1)).
+
+Still to revise later:
+
+- Run the `less-permission-prompts` skill on recent transcripts to derive a data-driven allowlist — replace broad `Tool(*)` globs with narrower patterns where possible.
+- Split between user-level and project-level settings: `gh *` and `git *` are universal dev tools and arguably belong in user settings, not this repo's settings.
+- Consider a `deny` list for clearly destructive operations (`git push --force *`, `git reset --hard *`, `rm -rf *`) as defense-in-depth against the broad allow patterns.
 - Add hooks if we want automated behaviors (e.g. run `dotnet format` on stop) — only if the user asks.
+- Decide whether to commit a `settings.local.json` convention or keep everything in the tracked `settings.json`.
 
 ## 5. Migrate to `.slnx`
 

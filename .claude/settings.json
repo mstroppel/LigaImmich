@@ -3,7 +3,9 @@
     "allow": [
       "Bash(gh *)",
       "Bash(git *)",
-      "Bash(dotnet *)"
+      "Bash(dotnet *)",
+      "Bash(docker *)",
+      "Bash(pwsh *)"
     ]
   }
 }
