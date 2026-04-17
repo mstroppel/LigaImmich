@@ -87,7 +87,24 @@ Source: `Next Steps` list in [README.md](README.md#next-steps).
 - Git hygiene: add `ImmichClient.g.cs` and `immich-openapi-specs.json` to `.gitignore` and remove them from history in the same PR.
 - CI: ensure the build agent has network access for the download step, or publish the spec as a build artifact we can restore offline.
 
-## 9. Add a test project
+## 9. Refactor configuration
+
+- Today [appsettings.json](FL.LigaImmich/appsettings.json) holds defaults (Immich base URL, API key placeholder, scheduler cron). Goal: same config bindable from three sources without code changes — `appsettings.json`, environment variables (Docker), and local dev overrides.
+- Strongly-typed options:
+  - Introduce `ImmichOptions` and `SchedulerOptions` records bound via `services.AddOptions<T>().BindConfiguration("Immich")` etc., with `DataAnnotations` validation (`Required` `BaseUrl`, `ApiKey`) and `ValidateOnStart()` so misconfiguration fails fast at worker startup.
+  - Centralize binding in one extension method so new options are added in a single place.
+- Docker / environment variables:
+  - Document the mapping explicitly, e.g. `Immich__BaseUrl`, `Immich__ApiKey`, `Scheduler__TimeZone`, `Scheduler__Tasks__SyncAlbums__Cron` (double underscore = section separator).
+  - Update [Dockerfile](Dockerfile) / compose samples with a documented `.env` example (no real secrets committed).
+  - Remove the empty `ApiKey` default from `appsettings.json` so a missing env var surfaces as a validation error instead of silently using `""`.
+- Developer ergonomics:
+  - Add `appsettings.Development.json` (committed, non-secret defaults only) and enable user-secrets on [FL.LigaImmich.csproj](FL.LigaImmich/FL.LigaImmich.csproj) via `<UserSecretsId>` so `dotnet user-secrets set "Immich:ApiKey" ...` just works.
+  - Ensure host builder loads `appsettings.{Environment}.json`, user-secrets (Development only), and environment variables in that precedence order.
+  - Commit a `.env.example` at the repo root listing every override key with inline comments.
+  - README section: a 5-line "first run" recipe for both local dev (user-secrets) and Docker (`.env`).
+- Validate both paths with a smoke test: worker boots from `dotnet run` using user-secrets, and from `docker run -e Immich__ApiKey=...` using env vars only.
+
+## 10. Add a test project
 
 - Create `FL.LigaImmich.Tests` alongside the existing projects, using xUnit + `Microsoft.NET.Test.Sdk` and `FluentAssertions` (pick whatever lines up with current .NET SDK norms).
 - Wire it into the solution (or `.slnx` after section 5) so `dotnet test` from the repo root discovers it.
@@ -101,4 +118,4 @@ Source: `Next Steps` list in [README.md](README.md#next-steps).
 
 ## Suggested execution order
 
-1, 2, 2a, 4 → 5 → 9 → 6 → 7 → 8a → 8b. Section 3 runs continuously as each step lands.
+1, 2, 2a, 4 → 5 → 9 → 10 → 6 → 7 → 8a → 8b. Section 3 runs continuously as each step lands.
