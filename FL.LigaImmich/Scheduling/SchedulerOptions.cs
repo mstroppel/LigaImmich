@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FL.LigaImmich.Scheduling;
 
 public sealed class SchedulerOptions
@@ -12,8 +10,6 @@ public sealed class SchedulerOptions
 
 public sealed class TaskScheduleOptions
 {
-    [Required]
-    [MinLength(1)]
     public string Cron { get; set; } = "";
     public bool Enabled { get; set; } = true;
 }
