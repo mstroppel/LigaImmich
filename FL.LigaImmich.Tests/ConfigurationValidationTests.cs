@@ -55,6 +55,55 @@ public class ConfigurationValidationTests
     }
 
     [Fact]
+    public void EnvironmentVariableAliases_Map_To_Dotnet_Config_Keys()
+    {
+        var aliases = new Dictionary<string, string>
+        {
+            ["IMMICH_BASE_URL"] = "https://immich.example.com/api",
+            ["IMMICH_API_KEY"] = "secret",
+            ["SCHEDULER_TIMEZONE"] = "UTC",
+            ["SCHEDULER_SYNC_ALBUMS_CRON"] = "0 */5 * * * *",
+            ["SCHEDULER_SYNC_ALBUMS_ENABLED"] = "true",
+        };
+
+        foreach (var (name, value) in aliases)
+        {
+            Environment.SetEnvironmentVariable(name, value);
+        }
+
+        try
+        {
+            var builder = Host.CreateApplicationBuilder();
+            builder.Configuration.AddLigaImmichEnvironmentVariables();
+
+            builder.Services.AddOptions<SchedulerOptions>()
+                .Bind(builder.Configuration.GetSection(SchedulerOptions.SectionName))
+                .ValidateDataAnnotations()
+                .ValidateOnStart();
+            builder.Services.AddImmichClient(builder.Configuration);
+
+            using var host = builder.Build();
+            host.Start();
+
+            var immich = host.Services.GetRequiredService<IOptions<ImmichClientConfig>>().Value;
+            var scheduler = host.Services.GetRequiredService<IOptions<SchedulerOptions>>().Value;
+
+            Assert.Equal(new Uri("https://immich.example.com/api"), immich.BaseUrl);
+            Assert.Equal("secret", immich.ApiKey);
+            Assert.Equal("UTC", scheduler.TimeZone);
+            Assert.Equal("0 */5 * * * *", scheduler.Tasks["SyncAlbums"].Cron);
+            Assert.True(scheduler.Tasks["SyncAlbums"].Enabled);
+        }
+        finally
+        {
+            foreach (var name in aliases.Keys)
+            {
+                Environment.SetEnvironmentVariable(name, null);
+            }
+        }
+    }
+
+    [Fact]
     public void SchedulerOptions_Bind_TaskSchedule_FromConfig()
     {
         var settings = new Dictionary<string, string?>

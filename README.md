@@ -38,22 +38,22 @@ Or pass overrides directly:
 
 ```bash
 docker run --rm \
-  -e Immich__BaseUrl="https://immich.example.com/api" \
-  -e Immich__ApiKey="<your-api-key>" \
+  -e IMMICH_BASE_URL="https://immich.example.com/api" \
+  -e IMMICH_API_KEY="<your-api-key>" \
   ghcr.io/mstroppel/liga-immich:latest
 ```
 
 ## Configuration
 
-All settings in [appsettings.json](FL.LigaImmich/appsettings.json) can be overridden via environment variables using the .NET double-underscore convention (`Section__Key`):
+The worker exposes a Docker-friendly `SCREAMING_SNAKE_CASE` env var for each setting in [appsettings.json](FL.LigaImmich/appsettings.json). These are mapped to the underlying .NET config keys at startup (see [EnvironmentVariableConfiguration.cs](FL.LigaImmich/EnvironmentVariableConfiguration.cs)):
 
-| Setting                              | Env var                                 | Description                                                          |
-| ------------------------------------ | --------------------------------------- | -------------------------------------------------------------------- |
-| `Immich:BaseUrl`                     | `Immich__BaseUrl`                       | Immich API base URL (e.g. `https://immich.example.com/api`).         |
-| `Immich:ApiKey`                      | `Immich__ApiKey`                        | Immich API key.                                                      |
-| `Scheduler:TimeZone`                 | `Scheduler__TimeZone`                   | IANA time zone used for cron expressions (default: `Europe/Berlin`). |
-| `Scheduler:Tasks:SyncAlbums:Cron`    | `Scheduler__Tasks__SyncAlbums__Cron`    | Cron expression for the album sync task.                             |
-| `Scheduler:Tasks:SyncAlbums:Enabled` | `Scheduler__Tasks__SyncAlbums__Enabled` | Enable/disable the album sync task.                                  |
+| Setting                              | Env var                         | Description                                                          |
+| ------------------------------------ | ------------------------------- | -------------------------------------------------------------------- |
+| `Immich:BaseUrl`                     | `IMMICH_BASE_URL`               | Immich API base URL (e.g. `https://immich.example.com/api`).         |
+| `Immich:ApiKey`                      | `IMMICH_API_KEY`                | Immich API key.                                                      |
+| `Scheduler:TimeZone`                 | `SCHEDULER_TIMEZONE`            | IANA time zone used for cron expressions (default: `Europe/Berlin`). |
+| `Scheduler:Tasks:SyncAlbums:Cron`    | `SCHEDULER_SYNC_ALBUMS_CRON`    | Cron expression for the album sync task.                             |
+| `Scheduler:Tasks:SyncAlbums:Enabled` | `SCHEDULER_SYNC_ALBUMS_ENABLED` | Enable/disable the album sync task.                                  |
 
 ## Regenerating the Immich client
 
