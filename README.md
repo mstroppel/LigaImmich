@@ -1,8 +1,8 @@
 
 # LigaImmich
 
-[![Build and Test](https://github.com/mstroppel/LigaImmich/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/mstroppel/LigaImmich/actions/workflows/build-and-test.yml)
-[![Docker Publish](https://github.com/mstroppel/LigaImmich/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/mstroppel/LigaImmich/actions/workflows/docker-publish.yml)
+[![Build and Test](https://github.com/filmliga66/liga-immich/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/filmliga66/liga-immich/actions/workflows/build-and-test.yml)
+[![Docker Publish](https://github.com/filmliga66/liga-immich/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/filmliga66/liga-immich/actions/workflows/docker-publish.yml)
 
 .NET background worker that automates [Immich](https://immich.app/) for Film-Liga needs. Runs on a cron schedule and executes scheduled tasks (currently: album synchronisation) against an Immich server via its REST API.
 
@@ -25,13 +25,13 @@ The Immich base URL defaults to `http://localhost:2283/api` in `Development` (se
 
 ## Running in Docker
 
-Images are published to `ghcr.io/mstroppel/liga-immich`. See the [Dockerfile](Dockerfile).
+Images are published to `ghcr.io/filmliga66/liga-immich`. See the [Dockerfile](Dockerfile).
 
 ```bash
 # copy .env.example to .env and fill in your values
 cp .env.example .env
 
-docker run --rm --env-file .env ghcr.io/mstroppel/liga-immich:latest
+docker run --rm --env-file .env ghcr.io/filmliga66/liga-immich:latest
 ```
 
 Or pass overrides directly:
@@ -40,7 +40,7 @@ Or pass overrides directly:
 docker run --rm \
   -e IMMICH_BASE_URL="https://immich.example.com/api" \
   -e IMMICH_API_KEY="<your-api-key>" \
-  ghcr.io/mstroppel/liga-immich:latest
+  ghcr.io/filmliga66/liga-immich:latest
 ```
 
 ## Configuration
