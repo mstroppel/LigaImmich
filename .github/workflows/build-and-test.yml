@@ -1,4 +1,4 @@
-﻿name: Build and Test
+name: Build and Test
 
 env:
   DOTNET_VERSION: '10.0.x'
@@ -21,7 +21,7 @@ jobs:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
       - name: 'Setup .NET'
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: 'Restore dependencies'
