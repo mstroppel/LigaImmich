@@ -1,2 +1,4 @@
-﻿*.g.cs
-!ImmichClient.g.cs
+# Generated NSwag client is produced at build time from the committed
+# immich-openapi-specs.json. Refresh the spec manually via
+# Download-ImmichOpenApiSpec.ps1 and commit both the .json and the .ref file.
+ImmichClient.g.cs

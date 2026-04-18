@@ -1,9 +1,16 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace FL.LigaImmich.ImmichClient;
 
-public record ImmichClientConfig
+public sealed class ImmichClientConfig
 {
-    public required Uri BaseUrl { get; init; }
-    public required string ApiKey { get; init; }
+    public const string SectionName = "Immich";
+
+    [Required]
+    public Uri? BaseUrl { get; set; }
+
+    [Required]
+    [MinLength(1)]
+    public string? ApiKey { get; set; }
 }

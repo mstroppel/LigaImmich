@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY *.sln global.json ./
+COPY *.slnx global.json ./
 COPY FL.LigaImmich/FL.LigaImmich.csproj FL.LigaImmich/
 COPY FL.LigaImmich.ImmichClient/FL.LigaImmich.ImmichClient.csproj FL.LigaImmich.ImmichClient/
 COPY FL.LigaImmich.ImmichClient.Generation/FL.LigaImmich.ImmichClient.Generation.csproj FL.LigaImmich.ImmichClient.Generation/
@@ -13,10 +13,7 @@ RUN dotnet publish FL.LigaImmich/FL.LigaImmich.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
-RUN addgroup --system --gid 1001 appgroup && \
-    adduser --system --uid 1001 --ingroup appgroup appuser
-
 COPY --from=build /app/publish .
 
-USER appuser
+USER $APP_UID
 ENTRYPOINT ["dotnet", "FL.LigaImmich.dll"]

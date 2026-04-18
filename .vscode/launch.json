@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug FL.LigaImmich",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/FL.LigaImmich/bin/Debug/net10.0/FL.LigaImmich.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/FL.LigaImmich",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "DOTNET_ENVIRONMENT": "Development"
+            },
+            "logging": {
+                "moduleLoad": false
+            }
+        }
+    ]
+}
