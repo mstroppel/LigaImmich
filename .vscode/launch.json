@@ -14,6 +14,9 @@
             "envFile": "${workspaceFolder}/.env",
             "env": {
                 "DOTNET_ENVIRONMENT": "Development"
+            },
+            "logging": {
+                "moduleLoad": false
             }
         }
     ]
