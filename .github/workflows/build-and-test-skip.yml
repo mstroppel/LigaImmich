@@ -1,0 +1,15 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**.cs'
+      - '**.csproj'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "No code changes — reporting success to satisfy required status check."
