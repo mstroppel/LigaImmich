@@ -1,11 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY *.slnx global.json ./
+COPY global.json ./
 COPY FL.LigaImmich/FL.LigaImmich.csproj FL.LigaImmich/
 COPY FL.LigaImmich.ImmichClient/FL.LigaImmich.ImmichClient.csproj FL.LigaImmich.ImmichClient/
-COPY FL.LigaImmich.ImmichClient.Generation/FL.LigaImmich.ImmichClient.Generation.csproj FL.LigaImmich.ImmichClient.Generation/
-RUN dotnet restore
+RUN dotnet restore FL.LigaImmich/FL.LigaImmich.csproj
 
 COPY . .
 RUN dotnet publish FL.LigaImmich/FL.LigaImmich.csproj -c Release -o /app/publish --no-restore
