@@ -14,7 +14,6 @@ builder.Services.AddOptions<SchedulerOptions>()
 
 builder.Services.AddImmichClient(builder.Configuration);
 
-builder.Services.AddScheduledTask<SyncAlbumsTask>();
 builder.Services.AddScheduledTask<TagAssetsByClubTask>();
 
 builder.Services.AddHostedService<CronSchedulerService>();

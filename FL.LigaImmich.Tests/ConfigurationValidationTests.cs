@@ -62,8 +62,8 @@ public class ConfigurationValidationTests
             ["IMMICH_BASE_URL"] = "https://immich.example.com/api",
             ["IMMICH_API_KEY"] = "secret",
             ["SCHEDULER_TIMEZONE"] = "UTC",
-            ["SCHEDULER_SYNC_ALBUMS_CRON"] = "0 */5 * * * *",
-            ["SCHEDULER_SYNC_ALBUMS_ENABLED"] = "true",
+            ["SCHEDULER_TAG_ASSETS_BY_CLUB_CRON"] = "0 */5 * * * *",
+            ["SCHEDULER_TAG_ASSETS_BY_CLUB_ENABLED"] = "true",
         };
 
         foreach (var (name, value) in aliases)
@@ -91,8 +91,8 @@ public class ConfigurationValidationTests
             Assert.Equal(new Uri("https://immich.example.com/api"), immich.BaseUrl);
             Assert.Equal("secret", immich.ApiKey);
             Assert.Equal("UTC", scheduler.TimeZone);
-            Assert.Equal("0 */5 * * * *", scheduler.Tasks["SyncAlbums"].Cron);
-            Assert.True(scheduler.Tasks["SyncAlbums"].Enabled);
+            Assert.Equal("0 */5 * * * *", scheduler.Tasks["TagAssetsByClub"].Cron);
+            Assert.True(scheduler.Tasks["TagAssetsByClub"].Enabled);
         }
         finally
         {
@@ -111,8 +111,8 @@ public class ConfigurationValidationTests
             ["Immich:BaseUrl"] = "https://immich.example.com/api",
             ["Immich:ApiKey"] = "secret",
             ["Scheduler:TimeZone"] = "UTC",
-            ["Scheduler:Tasks:SyncAlbums:Cron"] = "0 */5 * * * *",
-            ["Scheduler:Tasks:SyncAlbums:Enabled"] = "true",
+            ["Scheduler:Tasks:TagAssetsByClub:Cron"] = "0 */5 * * * *",
+            ["Scheduler:Tasks:TagAssetsByClub:Enabled"] = "true",
         };
 
         using var host = BuildHost(settings);
@@ -120,9 +120,9 @@ public class ConfigurationValidationTests
 
         var scheduler = host.Services.GetRequiredService<IOptions<SchedulerOptions>>().Value;
         Assert.Equal("UTC", scheduler.TimeZone);
-        Assert.True(scheduler.Tasks.TryGetValue("SyncAlbums", out var sync));
-        Assert.Equal("0 */5 * * * *", sync!.Cron);
-        Assert.True(sync.Enabled);
+        Assert.True(scheduler.Tasks.TryGetValue("TagAssetsByClub", out var task));
+        Assert.Equal("0 */5 * * * *", task!.Cron);
+        Assert.True(task.Enabled);
     }
 
     private static IHost BuildHost(IDictionary<string, string?> settings)
