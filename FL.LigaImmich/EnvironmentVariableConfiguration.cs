@@ -9,6 +9,8 @@ internal static class EnvironmentVariableConfiguration
         ["SCHEDULER_TIMEZONE"] = "Scheduler:TimeZone",
         ["SCHEDULER_SYNC_ALBUMS_CRON"] = "Scheduler:Tasks:SyncAlbums:Cron",
         ["SCHEDULER_SYNC_ALBUMS_ENABLED"] = "Scheduler:Tasks:SyncAlbums:Enabled",
+        ["SCHEDULER_TAG_ASSETS_BY_CLUB_CRON"] = "Scheduler:Tasks:TagAssetsByClub:Cron",
+        ["SCHEDULER_TAG_ASSETS_BY_CLUB_ENABLED"] = "Scheduler:Tasks:TagAssetsByClub:Enabled",
     };
 
     public static IConfigurationBuilder AddLigaImmichEnvironmentVariables(this IConfigurationBuilder builder)

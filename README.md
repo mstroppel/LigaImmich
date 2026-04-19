@@ -47,13 +47,15 @@ docker run --rm \
 
 The worker exposes a Docker-friendly `SCREAMING_SNAKE_CASE` env var for each setting in [appsettings.json](FL.LigaImmich/appsettings.json). These are mapped to the underlying .NET config keys at startup (see [EnvironmentVariableConfiguration.cs](FL.LigaImmich/EnvironmentVariableConfiguration.cs)):
 
-| Setting                              | Env var                         | Description                                                          |
-| ------------------------------------ | ------------------------------- | -------------------------------------------------------------------- |
-| `Immich:BaseUrl`                     | `IMMICH_BASE_URL`               | Immich API base URL (e.g. `https://immich.example.com/api`).         |
-| `Immich:ApiKey`                      | `IMMICH_API_KEY`                | Immich API key.                                                      |
-| `Scheduler:TimeZone`                 | `SCHEDULER_TIMEZONE`            | IANA time zone used for cron expressions (default: `Europe/Berlin`). |
-| `Scheduler:Tasks:SyncAlbums:Cron`    | `SCHEDULER_SYNC_ALBUMS_CRON`    | Cron expression for the album sync task.                             |
-| `Scheduler:Tasks:SyncAlbums:Enabled` | `SCHEDULER_SYNC_ALBUMS_ENABLED` | Enable/disable the album sync task.                                  |
+| Setting                                   | Env var                                | Description                                                          |
+| ----------------------------------------- | -------------------------------------- | -------------------------------------------------------------------- |
+| `Immich:BaseUrl`                          | `IMMICH_BASE_URL`                      | Immich API base URL (e.g. `https://immich.example.com/api`).         |
+| `Immich:ApiKey`                           | `IMMICH_API_KEY`                       | Immich API key.                                                      |
+| `Scheduler:TimeZone`                      | `SCHEDULER_TIMEZONE`                   | IANA time zone used for cron expressions (default: `Europe/Berlin`). |
+| `Scheduler:Tasks:SyncAlbums:Cron`         | `SCHEDULER_SYNC_ALBUMS_CRON`           | Cron expression for the album sync task.                             |
+| `Scheduler:Tasks:SyncAlbums:Enabled`      | `SCHEDULER_SYNC_ALBUMS_ENABLED`        | Enable/disable the album sync task.                                  |
+| `Scheduler:Tasks:TagAssetsByClub:Cron`    | `SCHEDULER_TAG_ASSETS_BY_CLUB_CRON`    | Cron expression for the club-tag task.                               |
+| `Scheduler:Tasks:TagAssetsByClub:Enabled` | `SCHEDULER_TAG_ASSETS_BY_CLUB_ENABLED` | Enable/disable the club-tag task.                                    |
 
 ## Regenerating the Immich client
 
