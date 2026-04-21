@@ -12,4 +12,5 @@ public sealed class TaskScheduleOptions
 {
     public string Cron { get; set; } = "";
     public bool Enabled { get; set; } = true;
+    public bool RunOnStartup { get; set; } = false;
 }

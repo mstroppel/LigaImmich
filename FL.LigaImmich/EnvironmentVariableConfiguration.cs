@@ -7,8 +7,9 @@ internal static class EnvironmentVariableConfiguration
         ["IMMICH_BASE_URL"] = "Immich:BaseUrl",
         ["IMMICH_API_KEY"] = "Immich:ApiKey",
         ["SCHEDULER_TIMEZONE"] = "Scheduler:TimeZone",
-        ["SCHEDULER_SYNC_ALBUMS_CRON"] = "Scheduler:Tasks:SyncAlbums:Cron",
-        ["SCHEDULER_SYNC_ALBUMS_ENABLED"] = "Scheduler:Tasks:SyncAlbums:Enabled",
+        ["SCHEDULER_TAG_ASSETS_BY_CLUB_CRON"] = "Scheduler:Tasks:TagAssetsByClub:Cron",
+        ["SCHEDULER_TAG_ASSETS_BY_CLUB_ENABLED"] = "Scheduler:Tasks:TagAssetsByClub:Enabled",
+        ["SCHEDULER_TAG_ASSETS_BY_CLUB_RUN_ON_STARTUP"] = "Scheduler:Tasks:TagAssetsByClub:RunOnStartup",
     };
 
     public static IConfigurationBuilder AddLigaImmichEnvironmentVariables(this IConfigurationBuilder builder)
