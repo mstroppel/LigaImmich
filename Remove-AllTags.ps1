@@ -68,6 +68,9 @@ if ([string]::IsNullOrWhiteSpace($baseUrl)) { throw "IMMICH_BASE_URL missing in 
 if ([string]::IsNullOrWhiteSpace($apiKey))  { throw "IMMICH_API_KEY missing in $EnvFile"  }
 
 $baseUrl = $baseUrl.TrimEnd('/')
+if ($baseUrl -notmatch '/api$') {
+    $baseUrl = "$baseUrl/api"
+}
 
 $headers = @{
     'x-api-key' = $apiKey
