@@ -22,7 +22,9 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
 
     public async Task ExecuteAsync(CancellationToken cancellationToken)
     {
-        var tagIdByName = await EnsureClubTagsAsync(cancellationToken);
+        await RemoveLegacyFlatClubTagsAsync(cancellationToken);
+
+        var tagIdByValue = await EnsureClubTagsAsync(cancellationToken);
 
         var folderPaths = await _immichClient.GetUniqueOriginalPathsAsync(cancellationToken);
         _logger.LogInformation("Fetched {Count} unique folder paths from Immich.", folderPaths.Count);
@@ -31,7 +33,7 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
 
         foreach (var folder in folderPaths)
         {
-            if (!ClubFolderMap.TryResolveTag(folder, out var tagName))
+            if (!ClubFolderMap.TryResolveTag(folder, out var tagValue))
             {
                 continue;
             }
@@ -42,9 +44,9 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
                 continue;
             }
 
-            if (!assetsByTag.TryGetValue(tagName, out var set))
+            if (!assetsByTag.TryGetValue(tagValue, out var set))
             {
-                assetsByTag[tagName] = set = [];
+                assetsByTag[tagValue] = set = [];
             }
 
             foreach (var asset in assets)
@@ -56,16 +58,16 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
             }
         }
 
-        foreach (var (tagName, assetIds) in assetsByTag)
+        foreach (var (tagValue, assetIds) in assetsByTag)
         {
             if (assetIds.Count == 0)
             {
                 continue;
             }
 
-            if (!tagIdByName.TryGetValue(tagName, out var tagId))
+            if (!tagIdByValue.TryGetValue(tagValue, out var tagId))
             {
-                _logger.LogWarning("Skipping tag {TagName}: no id resolved after upsert.", tagName);
+                _logger.LogWarning("Skipping tag {TagValue}: no id resolved after upsert.", tagValue);
                 continue;
             }
 
@@ -85,29 +87,56 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
                 tagged += response.Count;
             }
 
-            _logger.LogInformation("Tagged {Tagged}/{Total} assets with {TagName}.", tagged, assetIds.Count, tagName);
+            _logger.LogInformation("Tagged {Tagged}/{Total} assets with {TagValue}.", tagged, assetIds.Count, tagValue);
         }
     }
 
     private async Task<Dictionary<string, Guid>> EnsureClubTagsAsync(CancellationToken cancellationToken)
     {
         var upsert = new TagUpsertDto();
-        foreach (var name in ClubFolderMap.TagNames)
+        foreach (var value in ClubFolderMap.TagValues)
         {
-            upsert.Tags.Add(name);
+            upsert.Tags.Add(value);
         }
 
         var tags = await _immichClient.UpsertTagsAsync(upsert, cancellationToken);
 
-        var byName = new Dictionary<string, Guid>(StringComparer.Ordinal);
+        var byValue = new Dictionary<string, Guid>(StringComparer.Ordinal);
         foreach (var tag in tags)
         {
             if (Guid.TryParse(tag.Id, out var id))
             {
-                byName[tag.Value] = id;
+                byValue[tag.Value] = id;
             }
         }
 
-        return byName;
+        return byValue;
+    }
+
+    private async Task RemoveLegacyFlatClubTagsAsync(CancellationToken cancellationToken)
+    {
+        var allTags = await _immichClient.GetAllTagsAsync(cancellationToken);
+        var legacyLeafNames = new HashSet<string>(ClubFolderMap.LeafTagNames, StringComparer.Ordinal);
+
+        foreach (var tag in allTags)
+        {
+            if (!string.IsNullOrEmpty(tag.ParentId))
+            {
+                continue;
+            }
+
+            if (!legacyLeafNames.Contains(tag.Value))
+            {
+                continue;
+            }
+
+            if (!Guid.TryParse(tag.Id, out var id))
+            {
+                continue;
+            }
+
+            await _immichClient.DeleteTagAsync(id, cancellationToken);
+            _logger.LogInformation("Removed legacy flat club tag {TagValue} ({TagId}); assets will be re-tagged under {ParentTag}.", tag.Value, id, ClubFolderMap.ParentTag);
+        }
     }
 }
