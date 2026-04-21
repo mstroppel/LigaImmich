@@ -57,7 +57,7 @@ internal sealed class CronSchedulerService : BackgroundService
                 continue;
             }
 
-            loops.Add(RunTaskLoopAsync(registration, taskName, cron, timeZone, stoppingToken));
+            loops.Add(RunTaskLoopAsync(registration, taskName, cron, timeZone, taskOptions.RunOnStartup, stoppingToken));
         }
 
         if (loops.Count == 0)
@@ -73,10 +73,31 @@ internal sealed class CronSchedulerService : BackgroundService
         string taskName,
         CronExpression cron,
         TimeZoneInfo timeZone,
+        bool runOnStartup,
         CancellationToken stoppingToken)
     {
         _logger.LogInformation("Scheduling task {TaskName} with cron {Cron} in zone {TimeZone}.",
             taskName, cron.ToString(), timeZone.Id);
+
+        if (runOnStartup)
+        {
+            try
+            {
+                await using var scope = _serviceProvider.CreateAsyncScope();
+                var task = registration.Resolver(scope.ServiceProvider);
+                _logger.LogInformation("Executing task {TaskName} on startup.", taskName);
+                await task.ExecuteAsync(stoppingToken);
+                _logger.LogInformation("Task {TaskName} startup run completed.", taskName);
+            }
+            catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+            {
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Task {TaskName} threw an exception on startup.", taskName);
+            }
+        }
 
         while (!stoppingToken.IsCancellationRequested)
         {
