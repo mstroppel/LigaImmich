@@ -9,6 +9,7 @@ internal static class EnvironmentVariableConfiguration
         ["SCHEDULER_TIMEZONE"] = "Scheduler:TimeZone",
         ["SCHEDULER_TAG_ASSETS_BY_CLUB_CRON"] = "Scheduler:Tasks:TagAssetsByClub:Cron",
         ["SCHEDULER_TAG_ASSETS_BY_CLUB_ENABLED"] = "Scheduler:Tasks:TagAssetsByClub:Enabled",
+        ["SCHEDULER_TAG_ASSETS_BY_CLUB_RUN_ON_STARTUP"] = "Scheduler:Tasks:TagAssetsByClub:RunOnStartup",
     };
 
     public static IConfigurationBuilder AddLigaImmichEnvironmentVariables(this IConfigurationBuilder builder)
