@@ -2,8 +2,10 @@ namespace FL.LigaImmich.Clubs;
 
 internal static class ClubFolderMap
 {
+    public const string ParentTag = "Vereine";
+
     // Source of truth: https://github.com/filmliga66/archivstruktur/blob/main/reference/clubs.json
-    private static readonly Dictionary<string, string> FolderToTag = new(StringComparer.OrdinalIgnoreCase)
+    private static readonly Dictionary<string, string> FolderToLeafTag = new(StringComparer.OrdinalIgnoreCase)
     {
         ["A-Albverein"] = "Albverein",
         ["C-Gemischter_Chor"] = "Gemischter Chor",
@@ -24,26 +26,31 @@ internal static class ClubFolderMap
         ["Z-Kegler"] = "Kegler",
     };
 
-    public static IReadOnlyCollection<string> TagNames { get; } =
-        FolderToTag.Values.Distinct(StringComparer.Ordinal).ToArray();
+    public static IReadOnlyCollection<string> LeafTagNames { get; } =
+        FolderToLeafTag.Values.Distinct(StringComparer.Ordinal).ToArray();
 
-    public static bool TryResolveTag(string path, out string tagName)
+    public static IReadOnlyCollection<string> TagValues { get; } =
+        LeafTagNames.Select(ToTagValue).ToArray();
+
+    public static bool TryResolveTag(string path, out string tagValue)
     {
         if (!string.IsNullOrEmpty(path))
         {
             foreach (var segment in path.Split(Separators, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (FolderToTag.TryGetValue(segment, out var resolved))
+                if (FolderToLeafTag.TryGetValue(segment, out var leaf))
                 {
-                    tagName = resolved;
+                    tagValue = ToTagValue(leaf);
                     return true;
                 }
             }
         }
 
-        tagName = string.Empty;
+        tagValue = string.Empty;
         return false;
     }
+
+    public static string ToTagValue(string leaf) => $"{ParentTag}/{leaf}";
 
     private static readonly char[] Separators = ['/', '\\'];
 }
