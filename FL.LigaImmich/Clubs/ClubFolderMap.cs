@@ -2,7 +2,7 @@ namespace FL.LigaImmich.Clubs;
 
 internal static class ClubFolderMap
 {
-    public const string ParentTag = "_Vereine";
+    public const string ParentTag = "Vereine";
 
     // Source of truth: https://github.com/filmliga66/archivstruktur/blob/main/reference/clubs.json
     private static readonly Dictionary<string, string> FolderToLeafTag = new(StringComparer.OrdinalIgnoreCase)
