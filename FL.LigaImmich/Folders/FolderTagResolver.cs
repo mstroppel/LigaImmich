@@ -11,6 +11,10 @@ internal static class FolderTagResolver
     public static IReadOnlyCollection<string> ArchiveRoots { get; } =
     [
         "Digitalfoto",
+        "Dia",
+        "Negativ",
+        "Ton",
+        "Video",
     ];
 
     // Maps the case-insensitive root key to its canonical (configured) casing
