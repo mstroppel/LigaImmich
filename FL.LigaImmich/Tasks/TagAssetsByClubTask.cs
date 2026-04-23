@@ -51,7 +51,8 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
 
             foreach (var asset in assets)
             {
-                if (Guid.TryParse(asset.Id, out var assetId))
+                if (Guid.TryParse(asset.Id, out var assetId)
+                    && !asset.Tags.Any(t => string.Equals(t.Value, tagValue, StringComparison.Ordinal)))
                 {
                     set.Add(assetId);
                 }
