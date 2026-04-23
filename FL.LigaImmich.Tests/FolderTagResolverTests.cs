@@ -7,28 +7,28 @@ public class FolderTagResolverTests
     [Theory]
     [InlineData(
         "archiv/Digitalfoto/2019/F-Film-Liga/F_2019-07-20_Sommerfest",
-        "Digitalfoto/2019/F-Film-Liga/F_2019-07-20_Sommerfest")]
+        "Ordnerstruktur/Digitalfoto/2019/F-Film-Liga/F_2019-07-20_Sommerfest")]
     [InlineData(
         "/usr/src/app/external/archiv/Digitalfoto/2019/M-Musikverein/M_2019-05-00_Probenwoche",
-        "Digitalfoto/2019/M-Musikverein/M_2019-05-00_Probenwoche")]
+        "Ordnerstruktur/Digitalfoto/2019/M-Musikverein/M_2019-05-00_Probenwoche")]
     [InlineData(
         "Digitalfoto\\2025\\C-Gemischter_Chor\\Auftritt",
-        "Digitalfoto/2025/C-Gemischter_Chor/Auftritt")]
+        "Ordnerstruktur/Digitalfoto/2025/C-Gemischter_Chor/Auftritt")]
     [InlineData(
         "Digitalfoto/2025",
-        "Digitalfoto/2025")]
+        "Ordnerstruktur/Digitalfoto/2025")]
     [InlineData(
         "archiv/Dia/1975/F-Film-Liga/event",
-        "Dia/1975/F-Film-Liga/event")]
+        "Ordnerstruktur/Dia/1975/F-Film-Liga/event")]
     [InlineData(
         "archiv/Negativ/1980/M-Musikverein/Konzert",
-        "Negativ/1980/M-Musikverein/Konzert")]
+        "Ordnerstruktur/Negativ/1980/M-Musikverein/Konzert")]
     [InlineData(
         "archiv/Ton/1990/F-Film-Liga/recording",
-        "Ton/1990/F-Film-Liga/recording")]
+        "Ordnerstruktur/Ton/1990/F-Film-Liga/recording")]
     [InlineData(
         "archiv/Video/2000/N-Narrenzunft/Umzug",
-        "Video/2000/N-Narrenzunft/Umzug")]
+        "Ordnerstruktur/Video/2000/N-Narrenzunft/Umzug")]
     public void TryResolveTag_BuildsTagFromArchiveRoot_OnwardsThroughFolderPath(string path, string expected)
     {
         Assert.True(FolderTagResolver.TryResolveTag(path, out var tag));
@@ -59,7 +59,7 @@ public class FolderTagResolverTests
     public void TryResolveTag_MatchesArchiveRootCaseInsensitively_AndNormalizesToCanonicalCasing()
     {
         Assert.True(FolderTagResolver.TryResolveTag("archiv/digitalfoto/2019/F-Film-Liga/event", out var tag));
-        Assert.Equal("Digitalfoto/2019/F-Film-Liga/event", tag);
+        Assert.Equal("Ordnerstruktur/Digitalfoto/2019/F-Film-Liga/event", tag);
     }
 
     [Fact]
@@ -70,5 +70,12 @@ public class FolderTagResolverTests
         Assert.Contains("Negativ", FolderTagResolver.ArchiveRoots);
         Assert.Contains("Ton", FolderTagResolver.ArchiveRoots);
         Assert.Contains("Video", FolderTagResolver.ArchiveRoots);
+    }
+
+    [Fact]
+    public void TagValues_AreAllNestedUnderOrdnerstrukturParent()
+    {
+        Assert.Equal(FolderTagResolver.ArchiveRoots.Count, FolderTagResolver.TagValues.Count);
+        Assert.All(FolderTagResolver.TagValues, value => Assert.StartsWith("Ordnerstruktur/", value));
     }
 }

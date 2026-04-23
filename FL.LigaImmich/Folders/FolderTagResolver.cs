@@ -2,6 +2,8 @@ namespace FL.LigaImmich.Folders;
 
 internal static class FolderTagResolver
 {
+    public const string ParentTag = "Ordnerstruktur";
+
     private static readonly char[] Separators = ['/', '\\'];
 
     // Top-level folders that anchor the tag hierarchy. When one of these
@@ -22,6 +24,9 @@ internal static class FolderTagResolver
     private static readonly Dictionary<string, string> CanonicalRoot =
         ArchiveRoots.ToDictionary(r => r, r => r, StringComparer.OrdinalIgnoreCase);
 
+    public static IReadOnlyCollection<string> TagValues { get; } =
+        ArchiveRoots.Select(ToTagValue).ToArray();
+
     public static bool TryResolveTag(string path, out string tagValue)
     {
         if (!string.IsNullOrEmpty(path))
@@ -40,7 +45,7 @@ internal static class FolderTagResolver
                 }
 
                 segments[i] = canonical;
-                tagValue = string.Join('/', segments[i..]);
+                tagValue = ToTagValue(string.Join('/', segments[i..]));
                 return true;
             }
         }
@@ -48,4 +53,6 @@ internal static class FolderTagResolver
         tagValue = string.Empty;
         return false;
     }
+
+    public static string ToTagValue(string value) => $"{ParentTag}/{value}";
 }
