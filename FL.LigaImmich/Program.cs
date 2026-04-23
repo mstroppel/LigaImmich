@@ -15,6 +15,7 @@ builder.Services.AddOptions<SchedulerOptions>()
 builder.Services.AddImmichClient(builder.Configuration);
 
 builder.Services.AddScheduledTask<TagAssetsByClubTask>();
+builder.Services.AddScheduledTask<TagAssetsByEventTask>();
 builder.Services.AddScheduledTask<TagAssetsByFolderStructureTask>();
 builder.Services.AddScheduledTask<TagAssetsByYearTask>();
 

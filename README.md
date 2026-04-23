@@ -54,8 +54,12 @@ The worker exposes a Docker-friendly `SCREAMING_SNAKE_CASE` env var for each set
 | `Scheduler:TimeZone`                                 | `SCHEDULER_TIMEZONE`                               | IANA time zone used for cron expressions (default: `Europe/Berlin`). |
 | `Scheduler:Tasks:TagAssetsByClub:Cron`               | `SCHEDULER_TAG_ASSETS_BY_CLUB_CRON`                | Cron expression for the club-tag task.                               |
 | `Scheduler:Tasks:TagAssetsByClub:Enabled`            | `SCHEDULER_TAG_ASSETS_BY_CLUB_ENABLED`             | Enable/disable the club-tag task.                                    |
+| `Scheduler:Tasks:TagAssetsByEvent:Cron`              | `SCHEDULER_TAG_ASSETS_BY_EVENT_CRON`               | Cron expression for the event-tag task.                              |
+| `Scheduler:Tasks:TagAssetsByEvent:Enabled`           | `SCHEDULER_TAG_ASSETS_BY_EVENT_ENABLED`            | Enable/disable the event-tag task.                                   |
 | `Scheduler:Tasks:TagAssetsByFolderStructure:Cron`    | `SCHEDULER_TAG_ASSETS_BY_FOLDER_STRUCTURE_CRON`    | Cron expression for the folder-structure-tag task.                   |
 | `Scheduler:Tasks:TagAssetsByFolderStructure:Enabled` | `SCHEDULER_TAG_ASSETS_BY_FOLDER_STRUCTURE_ENABLED` | Enable/disable the folder-structure-tag task.                        |
+| `Scheduler:Tasks:TagAssetsByYear:Cron`               | `SCHEDULER_TAG_ASSETS_BY_YEAR_CRON`                | Cron expression for the year-tag task.                               |
+| `Scheduler:Tasks:TagAssetsByYear:Enabled`            | `SCHEDULER_TAG_ASSETS_BY_YEAR_ENABLED`             | Enable/disable the year-tag task.                                    |
 
 ## Regenerating the Immich client
 
