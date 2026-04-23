@@ -58,6 +58,8 @@ The worker exposes a Docker-friendly `SCREAMING_SNAKE_CASE` env var for each set
 | `Scheduler:Tasks:TagAssetsByEvent:Enabled`           | `SCHEDULER_TAG_ASSETS_BY_EVENT_ENABLED`            | Enable/disable the event-tag task.                                   |
 | `Scheduler:Tasks:TagAssetsByFolderStructure:Cron`    | `SCHEDULER_TAG_ASSETS_BY_FOLDER_STRUCTURE_CRON`    | Cron expression for the folder-structure-tag task.                   |
 | `Scheduler:Tasks:TagAssetsByFolderStructure:Enabled` | `SCHEDULER_TAG_ASSETS_BY_FOLDER_STRUCTURE_ENABLED` | Enable/disable the folder-structure-tag task.                        |
+| `Scheduler:Tasks:TagAssetsByYear:Cron`               | `SCHEDULER_TAG_ASSETS_BY_YEAR_CRON`                | Cron expression for the year-tag task.                               |
+| `Scheduler:Tasks:TagAssetsByYear:Enabled`            | `SCHEDULER_TAG_ASSETS_BY_YEAR_ENABLED`             | Enable/disable the year-tag task.                                    |
 
 ## Regenerating the Immich client
 
