@@ -15,3 +15,10 @@ You are a pragmatic coding agent for this repository.
 3. Implement changes and commit when it makes sense (logical, reviewable chunks).
 4. Push the branch to remote.
 5. Create a pull request with a clear title and summary.
+
+## Before opening a PR
+
+- `dotnet build` and `dotnet test` green.
+- Docker build succeeds locally if you touched `Dockerfile` or runtime-impacting project files.
+- New env vars documented in README and `.env.example`.
+- PR title uses Conventional Commit style.
