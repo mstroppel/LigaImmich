@@ -8,6 +8,7 @@ namespace FL.LigaImmich.Tasks;
 internal sealed class TagAssetsByClubTask : IScheduledTask
 {
     private const int BulkTagBatchSize = 500;
+    private const int UpsertTagBatchSize = 100;
 
     private readonly IImmichClient _immichClient;
     private readonly ILogger<TagAssetsByClubTask> _logger;
@@ -94,20 +95,26 @@ internal sealed class TagAssetsByClubTask : IScheduledTask
 
     private async Task<Dictionary<string, Guid>> EnsureClubTagsAsync(CancellationToken cancellationToken)
     {
-        var upsert = new TagUpsertDto();
-        foreach (var value in ClubFolderMap.TagValues)
-        {
-            upsert.Tags.Add(value);
-        }
-
-        var tags = await _immichClient.UpsertTagsAsync(upsert, cancellationToken);
-
         var byValue = new Dictionary<string, Guid>(StringComparer.Ordinal);
-        foreach (var tag in tags)
+        foreach (var batch in ClubFolderMap.TagValues
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.Ordinal)
+            .Chunk(UpsertTagBatchSize))
         {
-            if (Guid.TryParse(tag.Id, out var id))
+            var upsert = new TagUpsertDto();
+            foreach (var value in batch)
             {
-                byValue[tag.Value] = id;
+                upsert.Tags.Add(value);
+            }
+
+            var tags = await _immichClient.UpsertTagsAsync(upsert, cancellationToken);
+
+            foreach (var tag in tags)
+            {
+                if (Guid.TryParse(tag.Id, out var id))
+                {
+                    byValue[tag.Value] = id;
+                }
             }
         }
 
